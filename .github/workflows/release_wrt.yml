@@ -40,10 +40,6 @@ jobs:
     runs-on: ${{ inputs.runs-on }}
 
     steps:
-      - name: Clean Workspace
-        run: |
-          git clean -fdx  # 删除所有未跟踪文件
-          git reset --hard HEAD
       - name: Fix File Permissions
         run: |
           chmod +x patches/990_set_argon_primary
