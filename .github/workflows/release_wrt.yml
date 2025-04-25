@@ -40,6 +40,13 @@ jobs:
     runs-on: ${{ inputs.runs-on }}
 
     steps:
+      - name: Debug Patches File
+        run: |
+          echo "当前工作目录: $(pwd)"
+          echo "检查 patches 文件是否存在:"
+          ls -l /home/runner/work/wrt_release/wrt_release/patches/990_set_argon_primary
+          echo "文件权限:"
+          stat /home/runner/work/wrt_release/wrt_release/patches/990_set_argon_primary
       - name: Maximize build space
         uses: AdityaGarg8/remove-unwanted-software@v5
         with:
