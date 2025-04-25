@@ -40,10 +40,16 @@ jobs:
     runs-on: ${{ inputs.runs-on }}
 
     steps:
-      - name: Fix File Permissions
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          ref: modified  # 显式指定分支
+          fetch-depth: 0  # 拉取完整历史
+      - name: Force Reset Files
         run: |
-          chmod +x patches/990_set_argon_primary
-          ls -l patches/  # 验证权限
+          git reset --hard HEAD
+          git clean -fdx  # 清除所有未跟踪文件
+          git pull origin modified
       - name: Debug Patches File
         run: |
           echo "当前工作目录: $(pwd)"
