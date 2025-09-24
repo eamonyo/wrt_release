@@ -121,7 +121,7 @@ remove_unwanted_packages() {
     )
     local small8_packages=(
         "ppp" "firewall" "dae" "daed" "daed-next" "libnftnl" "nftables" "dnsmasq" "luci-app-alist"
-        "alist" "opkg" "smartdns" "luci-app-smartdns"
+        "alist" "opkg" 
     )
 
     for pkg in "${luci_packages[@]}"; do
@@ -183,9 +183,9 @@ install_small8() {
         tuic-client chinadns-ng ipt2socks tcping trojan-plus simple-obfs shadowsocksr-libev \
         luci-app-passwall v2dat mosdns luci-app-mosdns adguardhome luci-app-adguardhome ddns-go \
         luci-app-ddns-go taskd luci-lib-xterm luci-lib-taskd luci-app-store quickstart \
-        luci-app-quickstart luci-app-istorex luci-app-cloudflarespeedtest netdata luci-app-netdata \
-        lucky luci-app-lucky luci-app-openclash luci-app-homeproxy luci-app-amlogic nikki luci-app-nikki \
-        tailscale luci-app-tailscale oaf open-app-filter luci-app-oaf easytier luci-app-easytier \
+        luci-app-quickstart luci-app-istorex luci-app-netdata \
+        luci-app-amlogic nikki luci-app-nikki \
+        tailscale luci-app-tailscale \
         msd_lite luci-app-msd_lite cups luci-app-cupsd
 }
 
@@ -805,31 +805,7 @@ fix_rust_compile_error() {
     fi
 }
 
-update_smartdns() {
-    # smartdns 仓库地址
-    local SMARTDNS_REPO="https://github.com/pymumu/openwrt-smartdns.git"
-    local SMARTDNS_DIR="$BUILD_DIR/feeds/packages/net/smartdns"
-    # luci-app-smartdns 仓库地址
-    local LUCI_APP_SMARTDNS_REPO="https://github.com/pymumu/luci-app-smartdns.git"
-    local LUCI_APP_SMARTDNS_DIR="$BUILD_DIR/feeds/luci/applications/luci-app-smartdns"
 
-    echo "正在更新 smartdns..."
-    rm -rf "$SMARTDNS_DIR"
-    if ! git clone --depth=1 "$SMARTDNS_REPO" "$SMARTDNS_DIR"; then
-        echo "错误：从 $SMARTDNS_REPO 克隆 smartdns 仓库失败" >&2
-        exit 1
-    fi
-
-    install -Dm644 "$BASE_PATH/patches/100-smartdns-optimize.patch" "$SMARTDNS_DIR/patches/100-smartdns-optimize.patch"
-    sed -i '/define Build\/Compile\/smartdns-ui/,/endef/s/CC=\$(TARGET_CC)/CC="\$(TARGET_CC_NOCACHE)"/' "$SMARTDNS_DIR/Makefile"
-
-    echo "正在更新 luci-app-smartdns..."
-    rm -rf "$LUCI_APP_SMARTDNS_DIR"
-    if ! git clone --depth=1 "$LUCI_APP_SMARTDNS_REPO" "$LUCI_APP_SMARTDNS_DIR"; then
-        echo "错误：从 $LUCI_APP_SMARTDNS_REPO 克隆 luci-app-smartdns 仓库失败" >&2
-        exit 1
-    fi
-}
 
 update_diskman() {
     local path="$BUILD_DIR/feeds/luci/applications/luci-app-diskman"
@@ -1013,7 +989,6 @@ main() {
     add_quickfile
     update_lucky
     fix_rust_compile_error
-    update_smartdns
     update_diskman
     set_nginx_default_config
     update_uwsgi_limit_as
